@@ -1,4 +1,5 @@
 require 'ruboto'
+require File.expand_path('config', File.dirname(__FILE__))
 
 ruboto_import_widgets :TextView, :LinearLayout, :Button
 
@@ -14,7 +15,7 @@ $activity.handle_create do |bundle|
 
   handle_click do |view|
     if view.getText == 'M-x butterfly'
-      @text_view.setText "What hath Matz wrought!"
+      @text_view.setText "What hath Matz wrought! Nokogiri: #{Nokogiri::VERSION}"
       toast 'Flipped a bit via butterfly'
     end
   end

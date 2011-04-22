@@ -182,6 +182,11 @@ public class Script {
         /* the if makes sure we only do this the first time */
         if (configDir(to)) {
             copyScripts("scripts", scriptsDirFile, assets);
+
+          File dest = new File(scriptsDirFile.getParentFile(), "vendor");
+          dest.mkdir();
+          copyScripts("vendor", dest, assets);
+
         }
     }
 
