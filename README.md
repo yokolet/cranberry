@@ -86,7 +86,7 @@ I'd like to add "uninstall" the app to the troubleshooting. You can uninstall th
 
 
 
-#### How I made this app
+## How I made this app
 
 In the end, I'm going to add how I made this app and how to start it. This app won't work, but for myself, to try this app in future again, I'll leave this memo.
 
