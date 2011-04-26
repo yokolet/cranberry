@@ -7,7 +7,7 @@ As a result, Nokogiri was loaded on Android successfully but didn't work on it. 
 W/dalvikvm(  374): Unable to resolve superclass of Lorg/apache/xerces/dom/DeferredDocumentImpl; (2008)
 W/dalvikvm(  374): Link of class 'Lorg/apache/xerces/dom/DeferredDocumentImpl;' failed
 </pre>
-I'm pretty sure this sort of error messages complain there aren't enough interefaces of org.w3c packages defined in Android SDK. Actucally, Android SDK's org.w3c package is a subset of JDK's. This is the problem. Pure Java Nokogiri needs a fullset of org.w3c API since Nokogiri heavily relies on Xerces, nekoHTML and nekoDTD to keep compatibility with libxml2 backed, CRuby version. Xerces needs the fullset of org.w3c API to work. This is why Nokogiri ended up raising an exception as in below:
+I'm pretty sure this sort of error messages complain there aren't enough interfaces of org.w3c packages defined in Android SDK. Actually, Android SDK's org.w3c package is a subset of JDK's. This is the problem. Pure Java Nokogiri needs a fullset of org.w3c API since Nokogiri heavily relies on Xerces, nekoHTML and nekoDTD to keep compatibility with libxml2 backed, CRuby version. Xerces needs the fullset of org.w3c API to work. This is why Nokogiri ended up in raising an exception as in below:
 <pre>
 W/dalvikvm(  374): threadid=10: thread exiting with uncaught exception (group=0x40014760)
 E/AndroidRuntime(  374): FATAL EXCEPTION: runWithLargeStack
@@ -16,8 +16,6 @@ E/AndroidRuntime(  374): 	at org.apache.xerces.parsers.AbstractDOMParser.startDo
 E/AndroidRuntime(  374): 	at org.apache.xerces.impl.dtd.XMLDTDValidator.startDocument(Unknown Source)
 (snip)
 </pre>
-
-
 Is this avoidable? Might be. Googling led me some discussions about replacing org.w3c and other packages. If I can include Xerces' xml-apis.jar (defines org.w3c/org.w3c.xxx, javax.xml.xxx, org.xml.xxx) in my Android app and override core package, Nokogiri will start working exactly the same as a web app on Rails. But, it should not be a good workaround. Surgery on SDK might incur other applications that use replaced packages.
 
 
@@ -45,7 +43,7 @@ Not all Ruboto samples needs level 11 API. For example, samples of https://www.i
 
 ### Jar archives should be moved to project's libs directory
 
-This happens on an environmrnt that uses custom cloaderloader, for example, Google App Engine. So, I have all jars in my project's libs directory, https://github.com/yokolet/cranberry/tree/master/libs, so that custom classloader can load all jars. If those jars failed to be loaded, Nokogiri raises a mysterious, "undefined method `next_sibling' for class `Nokogiri::XML::Node'," error. I didn't get that error, so jars should be loaded.
+This happens on an environment that uses custom classloader, for example, Google App Engine. So, I have all jars in my project's libs directory, https://github.com/yokolet/cranberry/tree/master/libs, so that custom classloader can load all jars. If those jars failed to be loaded, Nokogiri raises a mysterious, "undefined method `next_sibling' for class `Nokogiri::XML::Node'," error. I didn't get that error, so jars should be loaded.
 
 Also, I commented line 18-24 out from nokogiri.rb (https://github.com/yokolet/cranberry/blob/master/assets/vendor/gems/1.8/gems/nokogiri-1.5.0.beta.4-java/lib/nokogiri.rb) so that Nokogiri doesn't try to load those jars again.
 
@@ -61,7 +59,7 @@ When I clicked on "Cranberry" Ruboto icon right after "rake install" said "Succe
 
 ### Needs threads to become a nifty app
 
-Android expects develpers' "responsiveness" (http://developer.android.com/guide/practices/design/responsiveness.html). Accroding the document, database or network accesse should not be performed on a main thread. In my Nokogiri sample, I tried to get rss feed, on the main thread firstly, so I got the error:
+Android expects developers' "responsiveness" (http://developer.android.com/guide/practices/design/responsiveness.html). According the document, database or network access should not be performed on a main thread. In my Nokogiri sample, I tried to get rss feed, on the main thread firstly, so I got the error:
 <pre>
 W/System.err(  343): org.jruby.exceptions.RaiseException: Native Exception: 'class android.os.NetworkOnMainThreadException'; Message: null; StackTrace: android.os.NetworkOnMainThreadException
 W/System.err(  343): 	at android.os.StrictMode$AndroidBlockGuardPolicy.onNetwork(StrictMode.java:1077)
@@ -107,7 +105,7 @@ In the end, I'm going to add how I made this app and how to start it. This app w
    $ android -s create avd -f -n cranberry-11 -t android-11 
    </pre>
    This possibly creates it. Actually, I created my virtual image using Eclipse's ADT. It's way easy.
-   Prior to useing android command, I intalled platforms. I also used Eclipse's ADT for that.
+   Prior to using android command, I installed platforms. I also used Eclipse's ADT for that.
 
 4. create ruboto app
    <pre>
